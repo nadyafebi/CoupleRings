@@ -1,6 +1,7 @@
 package me.meeu.couplerings;
 
 import me.meeu.couplerings.init.ModCreativeModeTabs;
+import me.meeu.couplerings.init.ModDataComponents;
 import me.meeu.couplerings.init.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -13,5 +14,6 @@ public class CoupleRings {
     public CoupleRings(IEventBus modEventBus, ModContainer modContainer) {
         ModItems.REGISTRY.register(modEventBus);
         ModCreativeModeTabs.REGISTRY.register(modEventBus);
+        ModDataComponents.REGISTRY.register(modEventBus);
     }
 }
