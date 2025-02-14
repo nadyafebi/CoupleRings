@@ -77,7 +77,7 @@ public class CoupleRing extends Item {
         }
 
         if (stack.has(ModDataComponents.PLAYER_TWO)) {
-            String playerUuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+            String playerUuid = stack.get(ModDataComponents.PLAYER_TWO).uuid();
             tooltip += " & " + getPlayerName(level, playerUuid);
         }
 
