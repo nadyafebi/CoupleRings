@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import me.meeu.couplerings.component.PlayerComponent;
 import me.meeu.couplerings.init.ModDataComponents;
@@ -60,18 +61,47 @@ public class CoupleRing extends Item {
 
         if (stack.has(ModDataComponents.PLAYER_ONE)) {
             String playerUuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
-            Player player = level.getPlayerByUUID(UUID.fromString(playerUuid));
-            String playerName = player != null ? player.getName().getString() : playerUuid;
-            tooltip = playerName;
+            tooltip = getPlayerName(level, playerUuid);
         }
 
         if (stack.has(ModDataComponents.PLAYER_TWO)) {
             String playerUuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
-            Player player = level.getPlayerByUUID(UUID.fromString(playerUuid));
-            String playerName = player != null ? player.getName().getString() : playerUuid;
-            tooltip += " & " + playerName;
+            tooltip += " & " + getPlayerName(level, playerUuid);
         }
 
         tooltipComponents.add(Component.literal(tooltip).withStyle(ChatFormatting.ITALIC, ChatFormatting.LIGHT_PURPLE));
+    }
+
+    public void onPickup(Player player, ItemStack stack) {
+        Level level = player.level();
+        if (level.isClientSide)
+            return;
+
+        if (!stack.has(ModDataComponents.PLAYER_ONE) || stack.has(ModDataComponents.PLAYER_TWO))
+            return;
+
+        String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+        String player2Uuid = player.getStringUUID();
+
+        if (player1Uuid.equals(player2Uuid))
+            return;
+
+        String player1Name = getPlayerName(level, player1Uuid);
+        String player2Name = player.getName().getString();
+
+        player.sendSystemMessage(
+                Component.literal(String.format("%s: %s, will you marry me?", player1Name, player2Name))
+                        .withStyle(ChatFormatting.LIGHT_PURPLE));
+        player.sendSystemMessage(Component.literal("(Right click to accept.)").withStyle(ChatFormatting.ITALIC,
+                ChatFormatting.DARK_GRAY));
+    }
+
+    private @Nullable Player getPlayer(Level level, String uuid) {
+        return level.getPlayerByUUID(UUID.fromString(uuid));
+    }
+
+    private String getPlayerName(Level level, String uuid) {
+        Player player = getPlayer(level, uuid);
+        return player != null ? player.getName().getString() : uuid;
     }
 }
