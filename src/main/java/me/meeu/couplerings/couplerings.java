@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
+import me.meeu.couplerings.init.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -15,5 +16,6 @@ public class CoupleRings {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public CoupleRings(IEventBus modEventBus, ModContainer modContainer) {
+        ModItems.REGISTRY.register(modEventBus);
     }
 }
