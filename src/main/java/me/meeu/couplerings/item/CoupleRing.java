@@ -41,7 +41,19 @@ public class CoupleRing extends Item {
         if (!stack.has(ModDataComponents.PLAYER_TWO)) {
             String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
             if (!player.getStringUUID().equals(player1Uuid)) {
-                stack.set(ModDataComponents.PLAYER_TWO, new PlayerComponent(player.getStringUUID()));
+                String player2Uuid = player.getStringUUID();
+                stack.set(ModDataComponents.PLAYER_TWO, new PlayerComponent(player2Uuid));
+
+                Player player1 = getPlayer(level, player1Uuid);
+                Player player2 = getPlayer(level, player2Uuid);
+
+                player1.sendSystemMessage(
+                        Component.literal(String.format("Congrats! %s said yes!", getPlayerName(player2)))
+                                .withStyle(ChatFormatting.LIGHT_PURPLE));
+                player2.sendSystemMessage(
+                        Component.literal(String.format("Congrats! Be happy with %s!", getPlayerName(player1)))
+                                .withStyle(ChatFormatting.LIGHT_PURPLE));
+
                 return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
             }
         }
@@ -103,5 +115,9 @@ public class CoupleRing extends Item {
     private String getPlayerName(Level level, String uuid) {
         Player player = getPlayer(level, uuid);
         return player != null ? player.getName().getString() : uuid;
+    }
+
+    private String getPlayerName(Player player) {
+        return player.getName().getString();
     }
 }
