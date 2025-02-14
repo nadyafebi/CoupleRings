@@ -29,16 +29,19 @@ public class CoupleRing extends Item {
             @NotNull InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
 
-        if (!level.isClientSide) {
-            if (!stack.has(ModDataComponents.PLAYER_ONE)) {
-                stack.set(ModDataComponents.PLAYER_ONE, new PlayerComponent(player.getStringUUID()));
+        if (level.isClientSide)
+            return super.use(level, player, usedHand);
+
+        if (!stack.has(ModDataComponents.PLAYER_ONE)) {
+            stack.set(ModDataComponents.PLAYER_ONE, new PlayerComponent(player.getStringUUID()));
+            return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
+        }
+
+        if (!stack.has(ModDataComponents.PLAYER_TWO)) {
+            String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+            if (!player.getStringUUID().equals(player1Uuid)) {
+                stack.set(ModDataComponents.PLAYER_TWO, new PlayerComponent(player.getStringUUID()));
                 return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
-            } else if (!stack.has(ModDataComponents.PLAYER_TWO)) {
-                String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
-                if (!player.getStringUUID().equals(player1Uuid)) {
-                    stack.set(ModDataComponents.PLAYER_TWO, new PlayerComponent(player.getStringUUID()));
-                    return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
-                }
             }
         }
 
@@ -52,7 +55,7 @@ public class CoupleRing extends Item {
         String tooltip = "Not Set";
 
         Level level = context.level();
-        if (level == null)
+        if (level == null || !level.isClientSide)
             return;
 
         if (stack.has(ModDataComponents.PLAYER_ONE)) {
