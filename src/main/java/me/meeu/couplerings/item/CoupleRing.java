@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import me.meeu.couplerings.component.PlayerComponent;
 import me.meeu.couplerings.init.ModDataComponents;
-import me.meeu.couplerings.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,19 +34,28 @@ public class CoupleRing extends Item {
         if (level.isClientSide)
             return super.use(level, player, usedHand);
 
-        if (!stack.has(ModDataComponents.PLAYER_ONE)) {
+        @Nullable
+        PlayerComponent player1Component = getPlayer1Component(stack);
+
+        if (player1Component == null) {
             stack.set(ModDataComponents.PLAYER_ONE, new PlayerComponent(player.getStringUUID()));
             return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
         }
 
-        if (!stack.has(ModDataComponents.PLAYER_TWO)) {
-            String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+        @Nullable
+        PlayerComponent player2Component = getPlayer2Component(stack);
+
+        if (player2Component == null) {
+            String player1Uuid = player1Component.uuid();
             if (!player.getStringUUID().equals(player1Uuid)) {
                 String player2Uuid = player.getStringUUID();
                 stack.set(ModDataComponents.PLAYER_TWO, new PlayerComponent(player2Uuid));
 
                 Player player1 = getPlayer(level, player1Uuid);
                 Player player2 = getPlayer(level, player2Uuid);
+
+                if (player1 == null || player2 == null)
+                    return super.use(level, player, usedHand);
 
                 player1.sendSystemMessage(
                         Component
@@ -76,17 +84,22 @@ public class CoupleRing extends Item {
             return;
 
         @Nullable
+        PlayerComponent player1Component = getPlayer1Component(stack);
+        @Nullable
+        PlayerComponent player2Component = getPlayer2Component(stack);
+
+        @Nullable
         String player1Name = null;
         @Nullable
         String player2Name = null;
 
-        if (stack.has(ModDataComponents.PLAYER_ONE)) {
-            String playerUuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+        if (player1Component != null) {
+            String playerUuid = player1Component.uuid();
             player1Name = getPlayerName(level, playerUuid);
         }
 
-        if (stack.has(ModDataComponents.PLAYER_TWO)) {
-            String playerUuid = stack.get(ModDataComponents.PLAYER_TWO).uuid();
+        if (player2Component != null) {
+            String playerUuid = player2Component.uuid();
             player2Name = getPlayerName(level, playerUuid);
         }
 
@@ -104,10 +117,15 @@ public class CoupleRing extends Item {
         if (level.isClientSide)
             return;
 
-        if (!stack.has(ModDataComponents.PLAYER_ONE) || stack.has(ModDataComponents.PLAYER_TWO))
+        @Nullable
+        PlayerComponent player1Component = getPlayer1Component(stack);
+        @Nullable
+        PlayerComponent player2Component = getPlayer2Component(stack);
+
+        if (player1Component == null || player2Component != null)
             return;
 
-        String player1Uuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
+        String player1Uuid = player1Component.uuid();
         String player2Uuid = player.getStringUUID();
 
         if (player1Uuid.equals(player2Uuid))
@@ -122,6 +140,14 @@ public class CoupleRing extends Item {
         player.sendSystemMessage(Component.translatable("couplerings.couplering.message.proposal_prompt").withStyle(
                 ChatFormatting.ITALIC,
                 ChatFormatting.DARK_GRAY));
+    }
+
+    private @Nullable PlayerComponent getPlayer1Component(ItemStack stack) {
+        return stack.get(ModDataComponents.PLAYER_ONE);
+    }
+
+    private @Nullable PlayerComponent getPlayer2Component(ItemStack stack) {
+        return stack.get(ModDataComponents.PLAYER_TWO);
     }
 
     private @Nullable Player getPlayer(Level level, String uuid) {
