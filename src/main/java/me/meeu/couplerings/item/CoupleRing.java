@@ -8,8 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 import me.meeu.couplerings.component.PlayerComponent;
 import me.meeu.couplerings.init.ModDataComponents;
+import me.meeu.couplerings.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -48,10 +50,12 @@ public class CoupleRing extends Item {
                 Player player2 = getPlayer(level, player2Uuid);
 
                 player1.sendSystemMessage(
-                        Component.literal(String.format("Congrats! %s said yes!", getPlayerName(player2)))
+                        Component
+                                .translatable("couplerings.couplering.message.congrats_player1", getPlayerName(player2))
                                 .withStyle(ChatFormatting.LIGHT_PURPLE));
                 player2.sendSystemMessage(
-                        Component.literal(String.format("Congrats! Be happy with %s!", getPlayerName(player1)))
+                        Component
+                                .translatable("couplerings.couplering.message.congrats_player2", getPlayerName(player1))
                                 .withStyle(ChatFormatting.LIGHT_PURPLE));
 
                 return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, stack);
@@ -65,23 +69,34 @@ public class CoupleRing extends Item {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
             @NotNull List<Component> tooltipComponents,
             @NotNull TooltipFlag tooltipFlag) {
-        String tooltip = "Not Set";
+        MutableComponent tooltip = Component.translatable("couplerings.couplering.tooltip.not_set");
 
         Level level = context.level();
         if (level == null || !level.isClientSide)
             return;
 
+        @Nullable
+        String player1Name = null;
+        @Nullable
+        String player2Name = null;
+
         if (stack.has(ModDataComponents.PLAYER_ONE)) {
             String playerUuid = stack.get(ModDataComponents.PLAYER_ONE).uuid();
-            tooltip = getPlayerName(level, playerUuid);
+            player1Name = getPlayerName(level, playerUuid);
         }
 
         if (stack.has(ModDataComponents.PLAYER_TWO)) {
             String playerUuid = stack.get(ModDataComponents.PLAYER_TWO).uuid();
-            tooltip += " & " + getPlayerName(level, playerUuid);
+            player2Name = getPlayerName(level, playerUuid);
         }
 
-        tooltipComponents.add(Component.literal(tooltip).withStyle(ChatFormatting.ITALIC, ChatFormatting.LIGHT_PURPLE));
+        if (player1Name != null && player2Name != null) {
+            tooltip = Component.translatable("couplerings.couplering.tooltip.couple_set", player1Name, player2Name);
+        } else if (player1Name != null) {
+            tooltip = Component.translatable("couplerings.couplering.tooltip.player_set", player1Name);
+        }
+
+        tooltipComponents.add(tooltip.withStyle(ChatFormatting.ITALIC, ChatFormatting.LIGHT_PURPLE));
     }
 
     public void onPickup(Player player, ItemStack stack) {
@@ -102,9 +117,10 @@ public class CoupleRing extends Item {
         String player2Name = player.getName().getString();
 
         player.sendSystemMessage(
-                Component.literal(String.format("%s: %s, will you marry me?", player1Name, player2Name))
+                Component.translatable("couplerings.couplering.message.proposal", player1Name, player2Name)
                         .withStyle(ChatFormatting.LIGHT_PURPLE));
-        player.sendSystemMessage(Component.literal("(Right click to accept.)").withStyle(ChatFormatting.ITALIC,
+        player.sendSystemMessage(Component.translatable("couplerings.couplering.message.proposal_prompt").withStyle(
+                ChatFormatting.ITALIC,
                 ChatFormatting.DARK_GRAY));
     }
 

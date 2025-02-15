@@ -1,4 +1,11 @@
 {
+  "couplerings.couplering.message.congrats_player1": "Congrats! %s said yes!",
+  "couplerings.couplering.message.congrats_player2": "Congrats! Be happy with %s!",
+  "couplerings.couplering.message.proposal": "%s: %s, will you marry me?",
+  "couplerings.couplering.message.proposal_prompt": "(Right click to accept.)",
+  "couplerings.couplering.tooltip.couple_set": "%s & %s",
+  "couplerings.couplering.tooltip.not_set": "Not Set",
+  "couplerings.couplering.tooltip.player_set": "%s",
   "itemGroup.couplerings": "Couple Rings",
   "item.couplerings.couple_ring": "Couple Ring"
 }
