@@ -1,25 +1,35 @@
+# Couple Rings
 
-Installation information
-=======
+:ring: A cute Minecraft mod for couples!
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+_(Made as a surprise gift for my partner for Valentine 2025 :cupid:)_
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+# Features
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+- Adds the Couple Ring item (currently can only be gotten from `/give` or creative mode).
+- You can set the ring to your player and toss it to another player. When they pick up the ring, they will be prompted with a proposal message.
+- When the second player accepts the proposal, the ring will display your name & their name.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+## Planned Features
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+- Crafting recipe for the ring.
+- Server announcement for married couples.
+- Custom proposal message.
+- Custom enchantments.
+
+# How to Play
+
+## Requirements
+
+- Minecraft (1.21.1)
+- NeoForge (21.1.119)
+- Curios API (9.2.2+1.21.1)
+
+## Installation
+
+1. Clone this repository.
+2. Run ./gradlew build.
+3. Find the mod's jar file in `/build/libs`.
+4. Add the jar to your Minecraft instance.
+
+_TBA: GitHub Release_
