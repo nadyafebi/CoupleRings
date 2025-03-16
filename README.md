@@ -27,9 +27,5 @@ _(Made as a surprise gift for my partner for Valentine 2025 :cupid:)_
 
 ## Installation
 
-1. Clone this repository.
-2. Run ./gradlew build.
-3. Find the mod's jar file in `/build/libs`.
-4. Add the jar to your Minecraft instance.
-
-_TBA: GitHub Release_
+1. Download the `.jar` file from a [release](https://github.com/nadyafebi/CoupleRings/releases).
+2. Add the file to your Minecraft instance through your launcher.
